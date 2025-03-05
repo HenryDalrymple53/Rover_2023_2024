@@ -5,14 +5,14 @@ default_sensor:
   sensor_plugin: occupancy_map_monitor/PointCloudOctomapUpdater
   filtered_cloud_topic: filtered_cloud
   max_range: 0.5
-  max_update_rate: 1.0
+  max_update_rate: 0.2
   padding_offset: 0.1
   padding_scale: 1.0
   point_cloud_topic: /camera/camera/depth/color/points
   point_subsample: 1
   frame_id: camera_depth_optical_frame
-  map_resolution: 0.005
-  octomap_resolution: 0.005
+  map_resolution: 0.002
+  octomap_resolution: 0.002
 
 
   
