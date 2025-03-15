@@ -10,8 +10,13 @@ find_package(ament_cmake REQUIRED)
 find_package(moveit_servo REQUIRED)
 find_package(joy REQUIRED)
 find_package(rover_arm_urdf REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(controller_manager_msgs REQUIRED)
+
 
 add_executable(joy_to_servo_node src/joy_to_servo_node.cpp)
+add_executable(controller_switcher src/controller_switcher.cpp)
 target_include_directories(joy_to_servo_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
@@ -22,8 +27,13 @@ ament_target_dependencies(
   "joy"
   "rover_arm_urdf"
 )
-
-install(TARGETS joy_to_servo_node
+ament_target_dependencies(
+  controller_switcher
+  "rclcpp"
+  "sensor_msgs"
+  "controller_manager_msgs"
+)
+install(TARGETS joy_to_servo_node controller_switcher
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
