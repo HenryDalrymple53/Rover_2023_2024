@@ -130,22 +130,26 @@ bool convertJoyToCmd(const std::vector<float>& axes, const std::vector<int>& but
       // joint->velocities.push_back(axes[controllerMappings.AXIS_MAP.at("D_PAD_X")]);
       joint->joint_names.push_back("shoulder_joint");
       joint->velocities.push_back(axes[controllerMappings.AXIS_MAP.at("D_PAD_Y")]);
-      joint->joint_names.push_back("wrist_roll_joint");
-      joint->velocities.push_back(buttons[controllerMappings.BUTTON_MAP.at("RIGHT_BUMPER")] - buttons[controllerMappings.BUTTON_MAP.at("LEFT_BUMPER")]);
+      // joint->joint_names.push_back("wrist_roll_joint");
+      // joint->velocities.push_back(axes[controllerMappings.AXIS_MAP.at("D_PAD_X")]);
       // Map the diamond to the distal joints
       return false;
     }
 
     // The bread and butter: map buttons to twist commands
-    twist->twist.linear.z = axes[controllerMappings.AXIS_MAP.at("LEFT_STICK_Y")];
+    twist->twist.linear.y = axes[controllerMappings.AXIS_MAP.at("LEFT_STICK_Y")];
     twist->twist.linear.x = -1.0 * axes[controllerMappings.AXIS_MAP.at("LEFT_STICK_X")];
 
     double lin_y_right = -0.5 * (axes[controllerMappings.AXIS_MAP.at("RIGHT_TRIGGER")] - controllerMappings.AXIS_DEFAULTS.at("RIGHT_TRIGGER"));
     double lin_y_left = 0.5 * (axes[controllerMappings.AXIS_MAP.at("LEFT_TRIGGER")] - controllerMappings.AXIS_DEFAULTS.at("LEFT_TRIGGER"));
-    twist->twist.linear.y = lin_y_right + lin_y_left;
+    twist->twist.linear.z = lin_y_right + lin_y_left;
 
-
+    //pitch
     twist->twist.angular.x = axes[controllerMappings.AXIS_MAP.at("RIGHT_STICK_Y")];
+    //Yaw
+    twist->twist.angular.y = axes[controllerMappings.AXIS_MAP.at("RIGHT_STICK_X")];
+    // Roll
+    twist->twist.angular.z = axes[controllerMappings.AXIS_MAP.at("D_PAD_X")];
 
     // double roll_positive = buttons[controllerMappings.BUTTON_MAP.at("RIGHT_BUMPER")];
     // double roll_negative = -1 * (buttons[xontrollerMappings.BUTTON_MAP.at("LEFT_BUMPER")]);
@@ -190,7 +194,7 @@ class JoyToServoNode : public rclcpp::Node
 {
 public:
   JoyToServoNode(const rclcpp::NodeOptions& options)
-    : Node("joy_to_twist_publisher", options), frame_to_publish_(BASE_FRAME_ID)
+    : Node("joy_to_twist_publisher", options), frame_to_publish_(EEF_FRAME_ID)
   {
     // Declare and get the controller type parameter
     this->declare_parameter<std::string>("controller_type", "xbox");
