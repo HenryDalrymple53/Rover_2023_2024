@@ -44,6 +44,12 @@ def generate_launch_description():
         description="Ros2 Control Hardware Interface Type [main, sim]",
     )
 
+    controller_type= DeclareLaunchArgument(
+        "ros2_control_hardware_type",
+        default_value="xbox",
+        description="Ros2 Control Hardware Interface Type [xbox, ps, flight]",
+    )
+
     kinematics_yaml = load_yaml(
         "rover_arm", "config/kinematics.yaml"   
     )
@@ -202,6 +208,9 @@ def generate_launch_description():
     joy_to_servo_node = Node(
         package="joy_to_servo",
         executable="joy_to_servo_node",
+        parameters=[{
+            'controller_type': LaunchConfiguration('controller_type')
+        }]
     )
 
     camera_node = Node(
@@ -219,6 +228,7 @@ def generate_launch_description():
     return LaunchDescription(
         [
             ros2_control_hardware_type, 
+            controller_type,
             rviz_node,
             container,
             move_group_node,
