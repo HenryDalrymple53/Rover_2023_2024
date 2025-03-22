@@ -82,7 +82,7 @@ def generate_launch_description():
             moveit_config.to_dict(),
             {
                 "octomap_frame": "base_link",
-                "octomap_resolution" : 0.005,
+                "octomap_resolution" : 0.01,
                 "max_range" : 0.5,
             },    
         ],
@@ -122,11 +122,12 @@ def generate_launch_description():
         arguments=["rover_arm_controller", "-c", "/controller_manager"],
     )
 
-    rover_gripper_controller_spawner = Node(
-        package="controller_manager", 
-        executable="spawner", 
-        arguments=["rover_gripper_controller", "-c", "/controller_manager"],
+    moveit_arm_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["rover_arm_controller_moveit", "-c", "/controller_manager"],
     )
+
 
     #RViz
     rviz_config_file = (
@@ -212,14 +213,24 @@ def generate_launch_description():
             'controller_type': LaunchConfiguration('controller_type')
         }]
     )
+    controller_switcher_node = Node(
+        package="joy_to_servo",
+        executable="controller_switcher",
+    )
 
     camera_node = Node(
         package='realsense2_camera',
         executable='realsense2_camera_node',
         name='camera',
         parameters=[{
-            'pointcloud.enable': True,
-            'align_depth.enable': True,
+            "depth_width": 424,
+            "depth_height": 240,
+            "depth_fps": 10,
+            "color_width": 424,
+            "color_height": 240,
+            "color_fps": 10,
+            "pointcloud.enable": True,
+            "align_depth.enable": True,
         }],
         output='screen'
     )
@@ -235,7 +246,9 @@ def generate_launch_description():
             ros2_control_node,
             joint_state_broadcaster_spawner,
             rover_arm_controller_spawner,
+            moveit_arm_controller_spawner,
             joy_to_servo_node,
+            controller_switcher_node,
             servo_node,
             camera_node,
             

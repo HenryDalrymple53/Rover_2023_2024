@@ -186,6 +186,10 @@ def generate_launch_description():
         package="joy_to_servo",
         executable="controller_switcher",
     )
+    joint_angle_setter_node = Node(
+        package = "joy_to_servo",
+        executable="joint_angle_controller",
+    )
 
     return LaunchDescription(
         [
@@ -198,6 +202,7 @@ def generate_launch_description():
             servo_node,
             joy_to_servo_node,
             controller_switcher_node,
+            joint_angle_setter_node,
             ros2_control_hardware_type,
             container,
         ]

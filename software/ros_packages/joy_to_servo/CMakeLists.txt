@@ -13,10 +13,13 @@ find_package(rover_arm_urdf REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(controller_manager_msgs REQUIRED)
-
+find_package(std_msgs REQUIRED)
+find_package(moveit_ros_planning_interface REQUIRED)
 
 add_executable(joy_to_servo_node src/joy_to_servo_node.cpp)
 add_executable(controller_switcher src/controller_switcher.cpp)
+add_executable(joint_angle_controller src/joint_angle_controller.cpp)
+
 target_include_directories(joy_to_servo_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
@@ -33,7 +36,14 @@ ament_target_dependencies(
   "sensor_msgs"
   "controller_manager_msgs"
 )
-install(TARGETS joy_to_servo_node controller_switcher
+ament_target_dependencies(
+  joint_angle_controller
+  "rclcpp"
+  "std_msgs"
+  "moveit_ros_planning_interface"
+)
+
+install(TARGETS joy_to_servo_node controller_switcher joint_angle_controller
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
