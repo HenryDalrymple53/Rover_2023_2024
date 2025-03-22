@@ -53,41 +53,7 @@ const std::string JOINT_TOPIC = "/servo_node/delta_joint_cmds";
 const std::string EEF_FRAME_ID = "arm_gripper";
 const std::string BASE_FRAME_ID = "base_link";
 
-// Enums for button names -> axis/button array index
-// For XBOX 1 controller
-// enum Axis
-// {
-//   LEFT_STICK_X = 0,
-//   LEFT_STICK_Y = 1,
-//   LEFT_TRIGGER = 2,
-//   RIGHT_STICK_X = 3,
-//   RIGHT_STICK_Y = 4,
-//   RIGHT_TRIGGER = 5,
-//   D_PAD_X = 6,
-//   D_PAD_Y = 7
-// };
-// enum Button
-// {
-//   A = 0,
-//   B = 1,
-//   X = 2,
-//   Y = 3,
-//   LEFT_BUMPER = 4,
-//   RIGHT_BUMPER = 5,
-//   CHANGE_VIEW = 6,
-//   MENU = 7,
-//   HOME = 8,
-//   LEFT_STICK_CLICK = 9,
-//   RIGHT_STICK_CLICK = 10
-// };
-
-// // Some axes have offsets (e.g. the default trigger position is 1.0 not 0)
-// // This will map the default values for the axes
-// std::map<Axis, double> AXIS_DEFAULTS = { { LEFT_TRIGGER, 1.0 }, { RIGHT_TRIGGER, 1.0 } };
-// std::map<Button, double> BUTTON_DEFAULTS;
-
 struct ControllerMappings {
- 
 
   std::map<std::string, int> AXIS_MAP;
   std::map<std::string, int> BUTTON_MAP;
@@ -96,7 +62,6 @@ struct ControllerMappings {
   std::map<std::string, double> BUTTON_DEFAULTS;
 
 };
-
 
 // To change controls or setup a new controller, all you should to do is change the above enums and the follow 2
 // functions
@@ -173,8 +138,6 @@ bool convertJoyToCmd(const std::vector<float>& axes, const std::vector<int>& but
 
     return false;
   }
-
-
 }
 
 /** \brief // This should update the frame_to_publish_ as needed for changing command frame via controller
@@ -188,7 +151,6 @@ void updateCmdFrame(std::string& frame_name, const std::vector<int>& buttons, co
   else if (buttons[controllerMappings.BUTTON_MAP.at("MENU")] && frame_name == BASE_FRAME_ID)
     frame_name = EEF_FRAME_ID;
 }
-
 
 class JoyToServoNode : public rclcpp::Node
 {
@@ -356,10 +318,7 @@ private:
           initializeControllerMappings("xbox");  // Default to Xbox
       }
   }
-
 };  // class JoyToServoNode
-
-
 
 int main(int argc, char * argv[]){
   rclcpp::init(argc, argv);

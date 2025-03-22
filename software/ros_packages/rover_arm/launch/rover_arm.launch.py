@@ -45,7 +45,7 @@ def generate_launch_description():
     )
 
     controller_type= DeclareLaunchArgument(
-        "ros2_control_hardware_type",
+        "controller_type",
         default_value="xbox",
         description="Ros2 Control Hardware Interface Type [xbox, ps, flight]",
     )
